@@ -1,0 +1,11 @@
+flask
+pandas
+langchain-groq
+langchain-core
+python-dotenv
+opencv-python
+pytesseract
+pydantic
+requests 
+pymongo
+bcrypt

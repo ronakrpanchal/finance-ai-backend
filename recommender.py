@@ -9,7 +9,6 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel, Field
 import pandas as pd
-import streamlit as st
 
 # ----------------------- Custom JSON Encoder for MongoDB ObjectId -----------------------
 class MongoJSONEncoder(json.JSONEncoder):

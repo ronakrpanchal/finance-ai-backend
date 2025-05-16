@@ -15,8 +15,6 @@ import os
 from datetime import datetime
 from pymongo import MongoClient
 
-pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
-
 # Load environment variables
 load_dotenv()
 API_KEY = os.environ.get("GROQ_API_KEY")

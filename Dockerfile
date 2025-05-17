@@ -40,4 +40,4 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONMALLOC=malloc
 
 # Configure Gunicorn with gevent workers for better memory handling
-CMD ["gunicorn", "--worker-class=gevent", "--worker-connections=1000", "--workers=3", "--timeout=120", "--log-level=info", "--preload", "main:app"]
+CMD ["gunicorn", "--workers=2", "--timeout=120", "--log-level=debug", "--max-requests=1000", "--max-requests-jitter=50", "main:app"]

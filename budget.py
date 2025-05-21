@@ -37,7 +37,7 @@ def load_model():
     parser = JsonOutputParser(pydantic_object=Budget)
 
     prompt = ChatPromptTemplate.from_messages([
-        ("system", """Extract budget details into JSON with this structure and keep the categories capitalized:
+        ("system", """Extract budget details into JSON with this structure:
             {{
                 "income": income_value,
                 "savings": savings_value,
@@ -95,10 +95,10 @@ def merge_budget_data(existing: dict, new: dict) -> dict:
         merged['savings'] = new['savings']
 
     # Convert existing expenses to dict for merging
-    existing_expenses = {item['category'].lower(): item for item in merged.get('expenses', [])}
+    existing_expenses = {item['category'].capitalize(): item for item in merged.get('expenses', [])}
 
     for new_item in new.get('expenses', []):
-        cat = new_item['category'].lower()
+        cat = new_item['category'].capitalize()
         if cat in existing_expenses:
             existing_expenses[cat]['allocated_amount'] = new_item['allocated_amount']
         else:

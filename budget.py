@@ -45,13 +45,14 @@ def load_model():
             Only include 'income' and 'savings' if explicitly mentioned in the input.
             Category names must be in Title Case:
 
-            {
+            {{
                 "income": income_value (optional),
                 "savings": savings_value (optional),
                 "expenses": [
-                    {"category": "Category Name", "allocated_amount": amount}
+                    {{"category": "Category Name", "allocated_amount": amount}}
                 ]
-            }"""),
+            }}
+            """),
         ("user", "{input}")
     ])
 

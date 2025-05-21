@@ -37,7 +37,7 @@ def load_model():
     parser = JsonOutputParser(pydantic_object=Budget)
 
     prompt = ChatPromptTemplate.from_messages([
-        ("system", """Extract budget details into JSON with this structure:
+        ("system", """Extract budget details into JSON with this structure and keep the categories capitalized:
             {{
                 "income": income_value,
                 "savings": savings_value,

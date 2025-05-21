@@ -20,9 +20,13 @@ class BudgetCategory(BaseModel):
     category: str
     allocated_amount: float
 
+# class Budget(BaseModel):
+#     income: float
+#     savings: float
+#     expenses: List[BudgetCategory]
 class Budget(BaseModel):
-    income: float
-    savings: float
+    income: Optional[float] = None
+    savings: Optional[float] = None
     expenses: List[BudgetCategory]
 
 # ---------------------- Model Loader ---------------------- #
@@ -37,14 +41,17 @@ def load_model():
     parser = JsonOutputParser(pydantic_object=Budget)
 
     prompt = ChatPromptTemplate.from_messages([
-        ("system", """Extract budget details into JSON with this structure:
-            {{
-                "income": income_value,
-                "savings": savings_value,
+        ("system", """Extract budget details into JSON. 
+            Only include 'income' and 'savings' if explicitly mentioned in the input.
+            Category names must be in Title Case:
+
+            {
+                "income": income_value (optional),
+                "savings": savings_value (optional),
                 "expenses": [
-                    {{"category": "category_name", "allocated_amount": amount}}
+                    {"category": "Category Name", "allocated_amount": amount}
                 ]
-            }}"""),
+            }"""),
         ("user", "{input}")
     ])
 
@@ -83,20 +90,43 @@ def get_user_budget(user_id):
 
 # ---------------------- Budget Merger ---------------------- #
 
+# def merge_budget_data(existing: dict, new: dict) -> dict:
+#     merged = existing.copy()
+
+#     # Update income if provided
+#     if 'income' in new and new['income'] != 0:
+#         merged['income'] = new['income']
+
+#     # Update savings if provided
+#     if 'savings' in new and new['savings'] != 0:
+#         merged['savings'] = new['savings']
+
+#     # Convert existing expenses to dict for merging
+#     existing_expenses = {item['category'].capitalize(): item for item in merged.get('expenses', [])}
+
+#     for new_item in new.get('expenses', []):
+#         cat = new_item['category'].capitalize()
+#         if cat in existing_expenses:
+#             existing_expenses[cat]['allocated_amount'] = new_item['allocated_amount']
+#         else:
+#             existing_expenses[cat] = new_item
+
+#     merged['expenses'] = list(existing_expenses.values())
+#     return merged
 def merge_budget_data(existing: dict, new: dict) -> dict:
     merged = existing.copy()
 
-    # Update income if provided
-    if 'income' in new and new['income'] != 0:
+    # Update income only if it exists and is not None
+    if 'income' in new and new['income'] is not None:
         merged['income'] = new['income']
 
-    # Update savings if provided
-    if 'savings' in new and new['savings'] != 0:
+    # Update savings only if it exists and is not None
+    if 'savings' in new and new['savings'] is not None:
         merged['savings'] = new['savings']
 
-    # Convert existing expenses to dict for merging
+    # Merge expenses
     existing_expenses = {item['category'].capitalize(): item for item in merged.get('expenses', [])}
-
+    
     for new_item in new.get('expenses', []):
         cat = new_item['category'].capitalize()
         if cat in existing_expenses:

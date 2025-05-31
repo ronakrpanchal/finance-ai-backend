@@ -3,6 +3,7 @@ from reciept import receipt_model,save_receipt_in_mongodb
 from budget import parse_budget,save_in_db
 from recommender import financial_recommender
 from datetime import datetime
+from chat import Chat
 
 app = Flask(__name__)
 
@@ -42,6 +43,19 @@ def recommendations():
     try:
         recommendations = financial_recommender(user_id)
         return jsonify({"message": "Recommendations generated successfully","response":recommendations}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/chat',methods=['POST'])
+def chat():
+    data = request.json
+    user_id = data.get('user_id')
+    query = data.get('query')
+    if not query:
+        return jsonify({"error": "Query is required"}), 400
+    try:
+        response = Chat(query=query,user_id=user_id)
+        return jsonify({"response":response}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     

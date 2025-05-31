@@ -178,10 +178,3 @@ def financial_recommender(user_id: str):
     
     recommendations = get_recommendations(user_data_json)
     return recommendations
-
-# ----------------------- Run Script -----------------------
-if __name__ == "__main__":
-    user_id = "68245ee0af6dbf213330448c"  # Update accordingly
-    recommendations = financial_recommender(user_id)
-    print("Financial Recommendations:")
-    print(json.dumps(recommendations, indent=2, cls=MongoJSONEncoder))

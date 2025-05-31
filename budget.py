@@ -20,10 +20,6 @@ class BudgetCategory(BaseModel):
     category: str
     allocated_amount: float
 
-# class Budget(BaseModel):
-#     income: float
-#     savings: float
-#     expenses: List[BudgetCategory]
 class Budget(BaseModel):
     income: Optional[float] = None
     savings: Optional[float] = None
@@ -90,30 +86,6 @@ def get_user_budget(user_id):
     return budget
 
 # ---------------------- Budget Merger ---------------------- #
-
-# def merge_budget_data(existing: dict, new: dict) -> dict:
-#     merged = existing.copy()
-
-#     # Update income if provided
-#     if 'income' in new and new['income'] != 0:
-#         merged['income'] = new['income']
-
-#     # Update savings if provided
-#     if 'savings' in new and new['savings'] != 0:
-#         merged['savings'] = new['savings']
-
-#     # Convert existing expenses to dict for merging
-#     existing_expenses = {item['category'].capitalize(): item for item in merged.get('expenses', [])}
-
-#     for new_item in new.get('expenses', []):
-#         cat = new_item['category'].capitalize()
-#         if cat in existing_expenses:
-#             existing_expenses[cat]['allocated_amount'] = new_item['allocated_amount']
-#         else:
-#             existing_expenses[cat] = new_item
-
-#     merged['expenses'] = list(existing_expenses.values())
-#     return merged
 def merge_budget_data(existing: dict, new: dict) -> dict:
     merged = existing.copy()
 
@@ -161,11 +133,3 @@ def save_in_db(user_id, response):
 
     save_json_to_file(merged_budget, 'merged_budget.json')  # Optional debug output
     client.close()
-
-# ---------------------- Main Entry Point ---------------------- #
-
-# if __name__ == "__main__":
-#     response = parse_budget("Set the budget for housing to 10000")
-#     print(response)
-#     save_in_db('68245ee0af6dbf213330448c', response)
-#     print("Budget data saved successfully.")

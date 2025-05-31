@@ -3,10 +3,9 @@ import pytesseract
 import json
 import base64
 import numpy as np
-from io import BytesIO
 import re
 from pydantic import BaseModel, Field
-from typing import List, Dict, Union, Optional
+from typing import List, Optional
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
@@ -350,9 +349,3 @@ def save_receipt_in_mongodb(user_id, llm_response, date, category):
     except Exception as e:
         print(f"MongoDB Error: {str(e)}")
         return False
-
-# 🧪 Test runner
-if __name__ == "__main__":
-    result = receipt_model("/Applications/Projects/Financial Recommender/FinanceAI/receipt-ocr-original.jpg")
-    save_receipt_in_mongodb('68245ee0af6dbf213330448c', result, datetime.now().strftime("%Y-%m-%d"), "groceries")
-    print("✅ Saved to MongoDB and llm_response.json")

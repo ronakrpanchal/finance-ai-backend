@@ -1,9 +1,11 @@
+from numpy import rec
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_core.messages import SystemMessage, HumanMessage
 from prompt_schema import ChatPrompt, User
 from prompt_utils import prompt_render
+import datetime
 import os
 
 load_dotenv()
@@ -31,6 +33,31 @@ def get_user_data(user_id : str):
         "total_savings": total_savings,
         "currency": currency
     }
+    
+def store_message(user_id:str,role:str,message:str):
+    client = MongoClient(os.environ.get("MONGO_URI"))
+    db = client['finance_ai']
+    messages_collection = db['chat_memory']
+    
+    message_data = {
+        "user_id": user_id,
+        "role": role,
+        "message": message,
+        "created_at": datetime.datetime.now(datetime.timezone.utc)
+    }
+    
+    messages_collection.insert_one(message_data)
+    client.close()    
+
+def get_recent_messages(user_id:str):
+    client = MongoClient(os.environ.get("MONGO_URI"))
+    db = client['finance_ai']
+    messages_collection = db['chat_memory']
+    
+    recent_messages = list(messages_collection.find({"user_id": user_id}).sort("created_at", -1).limit(10))
+    client.close()
+    
+    return [{"role": msg["role"], "content": msg["message"]} for msg in recent_messages]
 
 def load_model(query:str,user_id:str):
     llm = ChatGroq(
@@ -40,7 +67,8 @@ def load_model(query:str,user_id:str):
     user_data = get_user_data(user_id=user_id)
     # print(user_data)
     user = User(data=user_data)
-    system_prompt = prompt_render(ChatPrompt(user=user))
+    recent_messages = get_recent_messages(user_id)
+    system_prompt = prompt_render(ChatPrompt(user=user,recent_messages=recent_messages))
     messages = [
         SystemMessage(content=system_prompt),
         HumanMessage(content=query)
@@ -49,7 +77,9 @@ def load_model(query:str,user_id:str):
 
 
 def Chat(query:str,user_id:str) -> str:
+    store_message(user_id, "user", query)
     response  = load_model(query,user_id=user_id)
+    store_message(user_id, "assistant", response.content)
     return response.content
     
 if __name__ == "__main__":

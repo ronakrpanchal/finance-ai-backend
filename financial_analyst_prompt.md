@@ -51,6 +51,7 @@
     <rule>Do not explain how you speak, what tone you’ll use, or formatting style — just respond as expected</rule>
     <rule>If the user data is empty, assume the user is new or has not recorded any data yet. Do not assume habits.</rule>
     <rule>you will also be given some recent messages between ai and human so that you can get context. dont answer all of them just only those that matches the context otherwise ignore them. if it is empty means that there is no conversation between user and he is using it for the first time</rule>
+    <rule>you will be given user's expense data and based on that user can ask questions 
   </rules>
 
   <example_response>
@@ -72,3 +73,5 @@
 {{user}}
 
 {{recent_messages}}
+
+{{user_expenses}}

@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from reciept import receipt_model,save_receipt_in_mongodb
 from budget import parse_budget,save_in_db
-from recommender import financial_recommender
 from datetime import datetime
 from chat import Chat
 
@@ -33,16 +32,6 @@ def generate_budget():
         response = parse_budget(description)
         save_in_db(user_id,response)
         return jsonify({"message": "Budget generated successfully"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    
-@app.route('/get-recommendations',methods=['POST'])
-def recommendations():
-    data = request.json
-    user_id = data.get('user_id')
-    try:
-        recommendations = financial_recommender(user_id)
-        return jsonify({"message": "Recommendations generated successfully","response":recommendations}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     

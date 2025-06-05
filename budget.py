@@ -21,8 +21,6 @@ class BudgetCategory(BaseModel):
     allocated_amount: float
 
 class Budget(BaseModel):
-    income: Optional[float] = None
-    savings: Optional[float] = None
     expenses: List[BudgetCategory]
 
 # ---------------------- Model Loader ---------------------- #
@@ -38,12 +36,9 @@ def load_model():
 
     prompt = ChatPromptTemplate.from_messages([
         ("system", """Extract budget details into JSON. 
-            Only include 'income' and 'savings' if explicitly mentioned in the input.
             Category names must be in Title Case:
 
             {{
-                "income": income_value (optional),
-                "savings": savings_value (optional),
                 "expenses": [
                     {{"category": "Category Name", "allocated_amount": amount}}
                 ]
@@ -89,19 +84,11 @@ def get_user_budget(user_id):
 def merge_budget_data(existing: dict, new: dict) -> dict:
     merged = existing.copy()
 
-    # Update income only if it exists and is not None
-    if 'income' in new and new['income'] is not None:
-        merged['income'] = new['income']
-
-    # Update savings only if it exists and is not None
-    if 'savings' in new and new['savings'] is not None:
-        merged['savings'] = new['savings']
-
     # Merge expenses
-    existing_expenses = {item['category'].capitalize(): item for item in merged.get('expenses', [])}
+    existing_expenses = {item['category']: item for item in merged.get('expenses', [])}
     
     for new_item in new.get('expenses', []):
-        cat = new_item['category'].capitalize()
+        cat = new_item['category']
         if cat in existing_expenses:
             existing_expenses[cat]['allocated_amount'] = new_item['allocated_amount']
         else:

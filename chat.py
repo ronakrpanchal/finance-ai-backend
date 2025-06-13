@@ -119,7 +119,7 @@ def get_full_user_profile(user_id: str):
 
 def get_date_range_last_month_to_today():
     today = datetime.datetime.now()
-    first_day_last_month = today.replace(day=1) - relativedelta(months=1)
+    first_day_last_month = today.replace(day=1)
     return first_day_last_month.strftime("%Y-%m-%d"), today.strftime("%Y-%m-%d")
 
 def get_transactions_between_last_month_and_today(user_id):

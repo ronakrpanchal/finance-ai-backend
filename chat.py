@@ -172,7 +172,7 @@ def load_model(query:str,user_id:str):
     user = User(data=user_data)
     recent_messages = get_recent_messages(user_id)
     recent_expenses = get_transactions_between_last_month_and_today(user_id)
-    print(recent_expenses)
+    # print(recent_expenses)
     system_prompt = prompt_render(ChatPrompt(user=user,recent_messages=recent_messages,user_expenses=recent_expenses))
     messages = [
         SystemMessage(content=system_prompt),

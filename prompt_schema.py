@@ -9,3 +9,6 @@ class ChatPrompt(BaseModel):
     recent_messages : Optional[List[Dict[str,str]]] = None
     user_expenses : Optional[List] = None
     filename: str = "financial_analyst_prompt.md"
+    
+class ReceiptPrompt(BaseModel):
+    filename : str = "image_prompt.md"

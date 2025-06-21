@@ -16,7 +16,6 @@ def parse_reciept():
         return jsonify({"error": "Image URL is required"}), 400
     try:
         llm_response = receipt_model(image_url)
-        print(llm_response)
         save_receipt_in_mongodb(user_id=user_id,llm_response=llm_response,date=datetime.now().strftime("%Y-%m-%d"),category=category)
         return jsonify({"message": "Receipt parsed successfully"}), 200
     except Exception as e:

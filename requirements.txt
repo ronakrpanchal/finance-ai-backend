@@ -5,7 +5,7 @@ langchain-core
 python-dotenv
 opencv-python
 pydantic
-requests 
+requests
 pymongo
 bcrypt
 gunicorn

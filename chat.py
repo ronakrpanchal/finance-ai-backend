@@ -164,7 +164,7 @@ def get_recent_messages(user_id:str):
 
 def load_model(query:str,user_id:str):
     llm = ChatGroq(
-        model="meta-llama/llama-4-maverick-17b-128e-instruct",
+        model="llama-3.3-70b-versatile",
         api_key=GROQ_API_KEY
     )
     user_data = get_full_user_profile(user_id=user_id)
